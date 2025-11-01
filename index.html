@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Thrift Market — 下單測試</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Thrift Market — 下單測試</h1>
+  </header>
+
+  <section class="panel">
+    <h2>API 設定</h2>
+    <div class="row">
+      <label>API Base URL：</label>
+      <input id="apiBase" placeholder="例如 https://xxxxx.ngrok-free.app 或 http://192.168.2.162:8000" />
+      <button id="saveApiBtn">儲存</button>
+    </div>
+    <p class="hint">會存到瀏覽器 localStorage；若留空，預設用目前頁面所在來源（不建議）。</p>
+  </section>
+
+  <section class="panel">
+    <h2>快速下單</h2>
+    <div class="row">
+      <label>Buyer ID：</label>
+      <input id="buyerId" type="number" value="2" />
+    </div>
+    <div class="row">
+      <label>Product ID：</label>
+      <input id="productId" type="number" placeholder="例如 1 或 2" />
+      <button id="createBtn">建立訂單</button>
+    </div>
+    <pre id="createResult"></pre>
+  </section>
+
+  <section class="panel">
+    <h2>（選擇性）流程操作</h2>
+    <div class="row">
+      <label>Order ID：</label>
+      <input id="orderId" type="number" placeholder="剛建立回傳的 id" />
+    </div>
+    <div class="row">
+      <label>Seller ID：</label>
+      <input id="sellerId" type="number" value="1" />
+      <button id="confirmBtn">賣家確認</button>
+    </div>
+    <div class="row">
+      <label>By User ID：</label>
+      <input id="byUserId" type="number" value="2" />
+      <button id="finishBtn">完成交易</button>
+    </div>
+    <div class="row">
+      <button id="cancelBtn">取消訂單</button>
+    </div>
+    <pre id="flowResult"></pre>
+  </section>
+
+  <section class="panel">
+    <h2>備註</h2>
+    <ul>
+      <li>目前用假資料操作（直接輸入 Product ID），商品 1/2 來自我們 seed。</li>
+      <li>只有「已上架(onsale)」的商品才能建立訂單；確認後商品會變 <code>sold</code>。</li>
+      <li>若你開啟 ngrok，請把上面的 API Base 換成 ngrok 的 HTTPS 網址。</li>
+    </ul>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
