@@ -57,6 +57,29 @@
 </section>
 
   <section class="panel">
+  <h2>訂單清單</h2>
+  <div class="row">
+    <button id="tabBuyer">我的訂單（買家）</button>
+    <button id="tabSeller">我的販售（賣家）</button>
+    <input id="whoId" type="number" placeholder="輸入你的 user_id，例如買家2 / 賣家1" style="max-width:240px">
+    <select id="orderStatus">
+      <option value="">全部狀態</option>
+      <option value="pending" selected>待確認</option>
+      <option value="confirmed">已確認</option>
+      <option value="completed">已完成</option>
+      <option value="cancelled">已取消</option>
+    </select>
+    <button id="orderSearch">查詢</button>
+  </div>
+  <div id="orderList" class="grid"></div>
+  <div class="row" style="justify-content:space-between">
+    <button id="orderPrev">上一頁</button>
+    <span id="orderPageInfo" class="hint"></span>
+    <button id="orderNext">下一頁</button>
+  </div>
+</section>
+
+  <section class="panel">
     <h2>（選擇性）流程操作</h2>
     <div class="row">
       <label>Order ID：</label>
