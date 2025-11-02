@@ -108,9 +108,32 @@ window.addEventListener("DOMContentLoaded", () => {
       showResult($("flowResult"), String(err));
     }
   };
+
+  // ==============================================================加入載入 & 繪製邏輯
+    // 初始狀態
+  $("searchStatus").value = "onsale";
+  // 綁搜尋
+  $("searchBtn").onclick = () => {
+    paging.offset = 0;
+    fetchProducts().catch(e => alert(String(e)));
+  };
+  $("prevPageBtn").onclick = () => {
+    paging.offset = Math.max(0, paging.offset - paging.limit);
+    fetchProducts().catch(e => alert(String(e)));
+  };
+  $("nextPageBtn").onclick = () => {
+    if (paging.offset + paging.limit < paging.total) {
+      paging.offset += paging.limit;
+      fetchProducts().catch(e => alert(String(e)));
+    }
+  };
+
+  // 頁面載入就抓一次
+  fetchProducts().catch(e => console.error(e));
+
 });
 
-// =============== Products 列表 ===============
+// =========================================================== Products 列表 ===============
 let paging = { limit: 12, offset: 0, total: 0 };
 
 async function fetchProducts() {
