@@ -213,6 +213,30 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     };
   }
+  if (document.getElementById("pCreateBtn")) {
+  document.getElementById("pCreateBtn").onclick = async () => {
+    const seller_id = parseInt(document.getElementById("pSellerId").value || "0", 10);
+    const title = document.getElementById("pTitle").value.trim();
+    const description = document.getElementById("pDesc").value.trim() || null;
+    const price = parseFloat(document.getElementById("pPrice").value || "0");
+    const cover_image_url = document.getElementById("pCover").value.trim() || null;
+    const status = document.getElementById("pStatus").value || "onsale";
+    if (!seller_id || !title || !(price > 0)) {
+      return showResult(document.getElementById("pCreateResult"), "請輸入 seller_id / title / price > 0");
+    }
+    try {
+      const data = await postJSON("/api/product/create", {
+        seller_id, title, description, price, status, cover_image_url
+      });
+      showResult(document.getElementById("pCreateResult"), data);
+      // 立即刷新商品列表
+      paging.offset = 0;
+      fetchProducts().catch(()=>{});
+    } catch (err) {
+      showResult(document.getElementById("pCreateResult"), String(err));
+    }
+  };
+}
 
   // 快速下單
   if ($("createBtn")) {
