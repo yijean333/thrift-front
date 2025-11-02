@@ -47,11 +47,24 @@ function showResult(el, data) {
 window.addEventListener("DOMContentLoaded", () => {
   $("apiBase").value = getApiBase();
 
-  $("saveApiBtn").onclick = () => {
-    setApiBase($("apiBase").value);
-    alert("API Base 儲存完成！");
-  };
-
+  $("saveApiBtn").onclick = async () => {
+  const base = $("apiBase").value.trim().replace(/\/+$/, "");
+  if (!base) return alert("請填入 API Base");
+  try {
+    const r = await fetch(base + "/api/health");
+    if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+    const j = await r.json();
+    if (!j.ok) throw new Error("health 回應不正確");
+    setApiBase(base);
+    alert("API Base 驗證成功並已儲存！");
+    // 驗證成功後順便刷新商品
+    paging.offset = 0;
+    await fetchProducts();
+  } catch (e) {
+    alert("API Base 驗證失敗：\n" + e);
+  }
+};
+  
   $("createBtn").onclick = async () => {
     const buyer_id = parseInt($("buyerId").value, 10);
     const product_id = parseInt($("productId").value, 10);
@@ -148,12 +161,30 @@ async function fetchProducts() {
 
   const url = "/api/products?" + params.toString();
   const res = await fetch(apiUrl(url));
-  if (!res.ok) throw new Error(await res.text());
+
+  const ct = res.headers.get("content-type") || "";
+  const isJSON = ct.includes("application/json");
+
+  if (!res.ok) {
+    const msg = isJSON ? JSON.stringify(await res.json(), null, 2)
+                       : await res.text();
+    throw new Error(`HTTP ${res.status} ${res.statusText}\n${msg}`);
+  }
+
+  if (!isJSON) {
+    const text = await res.text();
+    throw new Error(
+      `後端未回傳 JSON（可能 API Base 設錯或被瀏覽器擋）\n` +
+      `Content-Type: ${ct}\n\n前 200 字：\n` + text.slice(0, 200)
+    );
+  }
+
   const data = await res.json();
   paging.total = data.total;
   renderProducts(data.items);
   renderPageInfo();
 }
+
 
 function renderProducts(items) {
   const grid = $("productGrid");
