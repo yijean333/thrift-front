@@ -35,6 +35,27 @@
     <pre id="createResult"></pre>
   </section>
 
+  <!-- 自動載入商品卡片 + 一鍵下單 -->
+  <section class="panel">
+  <h2>商品列表</h2>
+  <div class="row">
+    <input id="searchQ" placeholder="搜尋關鍵字（名稱/描述）" />
+    <select id="searchStatus">
+      <option value="">全部狀態</option>
+      <option value="onsale" selected>販售中</option>
+      <option value="sold">已售出</option>
+      <option value="archived">已下架</option>
+    </select>
+    <button id="searchBtn">搜尋</button>
+  </div>
+  <div id="productGrid" class="grid"></div>
+  <div class="row" style="justify-content:space-between">
+    <button id="prevPageBtn">上一頁</button>
+    <span id="pageInfo" class="hint"></span>
+    <button id="nextPageBtn">下一頁</button>
+  </div>
+</section>
+
   <section class="panel">
     <h2>（選擇性）流程操作</h2>
     <div class="row">
