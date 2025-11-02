@@ -45,4 +45,7 @@ pre {
   font-size:12px; padding:4px 8px; border-radius:999px; align-self:flex-start;
   border:1px solid #2a3358; color:#aab2d6;
 }
+button.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(106,166,255,.25) inset; }
+.order-card .meta { font-size: 12px; color: var(--muted); }
+.order-card .ops { display:flex; gap:8px; flex-wrap:wrap; }
 
