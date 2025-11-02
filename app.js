@@ -19,13 +19,14 @@ function isNgrokHost(hostname) {
 }
 function apiUrl(path) {
   const base = getApiBase();
-  const full = (base ? base : "") + path; // 例如 https://xxx.ngrok-free.app + /api/products
+  const full = (base ? base.replace(/\/+$/,"") : "") + path;
   const url = new URL(full, window.location.href);
-  if (isNgrokHost(url.hostname)) {
-    url.searchParams.set("ngrok-skip-browser-warning", "true");
+  if (/ngrok(-free)?\.app$/i.test(url.hostname)) {
+    url.searchParams.set("ngrok-skip-browser-warning", "true"); // 讓預檢 OPTIONS 也避開警告
   }
   return url.toString();
 }
+
 const commonHeaders = {
   "Content-Type": "application/json",
   // 這行很關鍵：繞過 ngrok 的瀏覽器警告頁
@@ -59,15 +60,21 @@ async function getJSON(path) {
 async function postJSON(path, body) {
   const res = await fetch(apiUrl(path), {
     method: "POST",
-    headers: commonHeaders,
-    body: JSON.stringify(body)
+    mode: "cors", // 明示 CORS
+    headers: {
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true", // 避免 ngrok HTML 警告頁
+    },
+    body: JSON.stringify(body),
   });
-  if (!res.ok) {
+  const ct = res.headers.get("content-type") || "";
+  if (!res.ok || !ct.includes("application/json")) {
     const text = await res.text().catch(() => "");
-    throw new Error(`HTTP ${res.status} ${res.statusText}\n${text.slice(0, 200)}`);
+    throw new Error(`HTTP ${res.status} ${res.statusText}\n${text.slice(0,200)}`);
   }
-  return ensureJsonResponse(res);
+  return res.json();
 }
+
 
 async function putJSON(path, body) {
   const res = await fetch(apiUrl(path), {
